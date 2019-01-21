@@ -67,12 +67,8 @@ public class DeceptionEval extends JCasAnnotator_ImplBase {
         System.out.println("Accuracy: " + accuracy);
 		
         try { 
-        		
 		      FileOutputStream evalFile = new FileOutputStream(new File(GUI.class.getClassLoader().getResource("results/eval.txt").getFile()));
-		      IOUtils.write("Precision: " + precision + "\n", evalFile, "UTF-8");
-		      IOUtils.write("Recall: " + recall + "\n", evalFile, "UTF-8");
-		      IOUtils.write("F1: " + f1 + "\n", evalFile, "UTF-8");
-		      IOUtils.write("Accuracy: " + accuracy + "\nEOF", evalFile, "UTF-8");
+		      IOUtils.write(precision + " " + recall + " " + f1 + " " + accuracy, evalFile, "UTF-8");
 		} catch (IOException e) {
 		    e.printStackTrace();
 		} 

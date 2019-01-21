@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -84,7 +87,7 @@ public class GUI extends HttpServlet {
 	        UIMAFramework.getLogger().log(Level.INFO, "Time: " + (now - start) + "ms");
 	        // Read evaluation file
 	        BufferedReader br = new BufferedReader(new FileReader(new File(getServletContext().getRealPath("/") + "WEB-INF/classes/results/eval.txt")));
-	        String message = "Evaluation message";
+	        List <String> message = new ArrayList<String>();
 	        try {
 	            StringBuilder sb = new StringBuilder();
 	            String line = br.readLine();
@@ -94,7 +97,7 @@ public class GUI extends HttpServlet {
 	                sb.append(System.lineSeparator());
 	                line = br.readLine();
 	            }
-	            message = sb.toString();
+	            message = Arrays.asList(sb.toString().split(" "));
 	        } finally {
 	            br.close();
 	        }
