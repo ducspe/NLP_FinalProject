@@ -28,7 +28,10 @@
 
 	       <br/>
 
-	       <h3 style="color:red;">Verdict : ${message}</h3>
+	       <h3 style="color:red;">Press Button to see the verdict :</h3>
+	       <form action="${tut5classification.gui.GUI}" method="post" >
+       			<input type="submit" class="btn btn-success col-xs-3" name="action" value="showresult" />
+       	   </form>
 	    
 	    </div>
     </body>

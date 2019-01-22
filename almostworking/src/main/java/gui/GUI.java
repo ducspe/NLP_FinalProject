@@ -2,8 +2,8 @@ package gui;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,12 +50,12 @@ public class GUI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getParameter("action");
-
+		ClassLoader loader = GUI.class.getClassLoader();
 		if (action == null) {
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		} else if (action.equals("train")) {
 		
-			ClassLoader loader = GUI.class.getClassLoader();
+			
 	    	
 			System.out.println("POST method action = " + action);
 	
@@ -106,8 +106,21 @@ public class GUI extends HttpServlet {
 	 
 		}else if (action.equals("detect")) {
 			String userInput = request.getParameter("textarea1");
-			System.out.println("User wrote: " + userInput);        
+			System.out.println("User wrote: " + userInput);      
 	        
+	        String userInputFile = loader.getResource("dataset/userdummytest.csv").getFile();
+	        
+			FileOutputStream fw = new FileOutputStream(userInputFile);
+			String content = userInput + "\tlie\n";
+			fw.write(content.getBytes());
+
+			fw.getFD().sync();
+			fw.close();
+			
+			request.getRequestDispatcher("/testresult.jsp").forward(request, response);
+			
+		} else if(action.equals("showresult")) {
+			
 			String modelPath = getServletContext().getRealPath("/") + "WEB-INF/classes/model/";  
 	        new File(modelPath).mkdirs();
 	        File modelDir = new File(modelPath);
@@ -115,16 +128,7 @@ public class GUI extends HttpServlet {
 	        String resltPath = getServletContext().getRealPath("/") + "WEB-INF/classes/results/";  
 	        new File(resltPath).mkdirs();
 	        File resultDir = new File(resltPath+"userinputeval.csv");
-	        
-	        File userInputFile = new File(getServletContext().getRealPath("/") + "WEB-INF/classes/dataset/userdummytest.csv");
-	        
-			FileWriter fw = new FileWriter(userInputFile, true);
-			String content = userInput + "\tlie\n";
-			fw.write(content);
-			fw.flush();
-			fw.close();
-			
-			File flushedUserInputFile = new File(getServletContext().getRealPath("/") + "WEB-INF/classes/dataset/userdummytest.csv");
+			File flushedUserInputFile = new File(loader.getResource("dataset/userdummytest.csv").getFile());
 			
 			System.out.println("Done");
 			
@@ -155,7 +159,7 @@ public class GUI extends HttpServlet {
 	            br.close();
 	        }
 	        request.setAttribute("message", message);
-			request.getRequestDispatcher("/testresult.jsp").forward(request, response);
+			request.getRequestDispatcher("/showresult.jsp").forward(request, response);
 		}
 	}
 }
